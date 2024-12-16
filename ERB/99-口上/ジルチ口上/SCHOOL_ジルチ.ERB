@@ -696,9 +696,15 @@ ELSE
 								PRINTFORML 「サボったのは認めてやるからアイツらには絶対言うなよ。お姉様ウォッチングにはちゃんとした意味があるんだ」
 								PRINTFORMW 「スタイル・女性らしい品格…第一印象でしか判断してないだぁ？悪かったな！」
 							ENDIF
-						;CASEELSE
-						;	PRINTFORML 「」
-						;	PRINTFORMW 「」
+						CASEELSE
+							PRINTDATAW
+								DATALIST
+								DATA 「俺は胸・腰、顔と太腿しか見てないからな、首筋とかほくろまでの細かすぎるパーツには気が回らねぇんだ」
+								DATA 「要するに女の全身全体がセクシーなら最高だな！」
+								ENDLIST
+								DATA 「よく店に来ている女子学生と言えば…食欲旺盛で胸デカい子多いな？食い意地より色気が勝ってるならセーフか……セリカにも見せてやりてぇな」
+								;DATA 「」
+							ENDDATA
 					ENDSELECT
 				ENDIF
 			ELSE
