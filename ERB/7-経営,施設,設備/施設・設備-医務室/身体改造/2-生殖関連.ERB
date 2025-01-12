@@ -456,7 +456,7 @@ ENDSELECT
 #DIM DYNAMIC 患者 = -1
 #DIM DYNAMIC 費用
 #DIM DYNAMIC LCOUNT
-PRINTL □薬物投与
+PRINTL □卵管結紮
 PRINTL 　卵管を結紮し、受精を未然に防ぐ不妊手術
 IF !ORIGIN
 	PRINTL □費用
@@ -1089,7 +1089,11 @@ SELECTCASE RESULT
 		SIF 術師 >= 0
 			PRINTFORM と%CALLNAME:術師%
 		PRINTW は準備のため休養に入ります
-		CALL PAYMENT, -SUMARRAY(費用), "男性器移植手術費用"
+		IF (性器リソース使用 >= 0) || (提供者 >= 0)
+			CALL PAYMENT, -SUMARRAY(費用), "男性器移植手術費用"
+		ELSE
+			CALL PAYMENT, -SUMARRAY(費用), "男性器形成手術費用"
+		ENDIF
 		TALENT:対象:ふたなり = 1
 		CALL 装飾継続チェック, 対象
 ;			CFLAG:対象:ペニスサイズ = ペニスサイズ
@@ -1128,6 +1132,123 @@ SELECTCASE RESULT
 ENDSELECT
 
 @女性器形成
+#DIM DYNAMIC 対象 = -1
+#DIM DYNAMIC 術師 = -1
+#DIM DYNAMIC 費用, 3
+#DIM DYNAMIC LRESULT
+#DIM DYNAMIC LCOUNT
+
+;費用:2 = ペニスサイズ*10000
+
+PRINTL □女性器形成
+PRINTL 　魔法、もしくは外科手術により男性の陰部に女性器を形成、もしくは移植する
+IF !ORIGIN
+	PRINTL □費用
+	CALL PASELIL, @"　{SUMARRAY(費用)}＄"
+ENDIF
+PRINTL □注意事項
+PRINTL 　魔法か外科手術かによって形成後の機能が異なる
+PRINTL 　外科手術によって形成した場合、交配できない
+PRINTL 　魔術師によって形成した場合、交配が可能
+PRINTL 　術士は種族「魔術師」の必要がある
+PRINTL 　どちらの方法も、対象、は1週間、魔術師は3日ほどの安静が必要
+PRINTL 　形成した対象の売却額は増加する
+PRINTL □対象
+
+IF 対象 >= 0
+	PRINTFORMLC 　[1] - %NAME:対象%
+ELSE
+	PRINTLC 　[1] - 対象を選ぶ
+ENDIF
+IF 術師 >= 0
+	PRINTFORMLC [2] - %NAME:術師%(魔術師)
+ELSE
+	PRINTLC [2] - 術師を選ぶ
+ENDIF
+PRINTL 
+DRAWLINE
+PRINTPLAIN 　女性器形成　
+PRINT [0] - 戻る　
+SIF 対象 >= 0
+	PRINT [3] - 形成を始める
+PRINTL 
+
+BINPUT
+SELECTCASE RESULT
+	CASE 0
+		RETURN 0
+	CASE 1
+		DRAWLINE
+		PRINTL □対象を選んでください
+		FOR PAGING, 0, CHARANUM
+			CALLFORM DISABLE, "EVENT_性器形成", PAGING
+			CALL PAGING, !RESULT && SEX(PAGING) == 1 && !VAGINA(PAGING), @"\@ TALENT:PAGING:体格 == 1 ? 幼 #  \@", "対象"
+		NEXT
+		SELECTCASE RESULT
+			CASE -1
+				RESTART
+			CASEELSE
+				対象 = RESULT
+				費用 = 50000
+				;小柄体型だと費用は下がる
+				SIF TALENT:RESULT:体格 == 1
+					費用 -= 20000
+				RESTART
+		ENDSELECT
+	CASE 2
+		DRAWLINE
+		PRINTL □対象を選んでください
+		FOR PAGING, 0, CHARANUM
+			CALLFORM DISABLE, "EVENT_性器形成", PAGING
+			CALL PAGING, !RESULT && CSTR:PAGING:種族 == "魔術師", "" , "術師"
+		NEXT
+		SELECTCASE RESULT
+			CASE -1
+				RESTART
+			CASEELSE
+				術師 = RESULT
+				費用:1 = 50000
+				IF 術師 >= 0
+					;魔術師だと技巧に応じて費用は下がる
+					SELECTCASE ABL:RESULT:技巧
+						CASE IS <= 9
+							費用:1 /= ABL:RESULT:技巧
+						CASEELSE
+							費用:1 = 3000
+					ENDSELECT
+				ENDIF
+				RESTART
+		ENDSELECT
+	CASE 3
+		SIF 対象 == -1
+			RESTART
+		IF SUMARRAY(費用) > MONEY && !ORIGIN
+			PRINTW 費用が足りません
+			RESTART
+		ENDIF
+		PRINTL 女性器の形成を始めます
+		PRINTFORM %CALLNAME:対象%
+		SIF 術師 >= 0
+			PRINTFORM と%CALLNAME:術師%
+		PRINTW は準備のため休養に入ります
+		CALL PAYMENT, -SUMARRAY(費用), "女性器形成手術費用"
+		TALENT:対象:ふたなり = 1
+		CALL 装飾継続チェック, 対象
+		CFLAG:対象:卵管結紮 = 1
+		CFLAG:対象:使用不可 = 15
+		IF 術師 >= 0
+			CFLAG:対象:卵管結紮 = 0
+			CFLAG:術師:使用不可 = 7
+		ENDIF
+		口上用患者 = 対象
+		CALL 身体改造口上, "女性器形成"
+		;医療経験加算
+		FOR LCOUNT, 0, CHARANUM
+			SIF CSTR:LCOUNT:配属 == "医務室" && CFLAG:LCOUNT:配属完了
+				EXP:LCOUNT:医療経験 += 5
+		NEXT
+		RETURN 1
+ENDSELECT
 
 @肋骨除去
 #DIM DYNAMIC 対象 = -1

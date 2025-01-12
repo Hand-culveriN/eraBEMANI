@@ -4,12 +4,12 @@ DRAWLINE
 
 PRINTL □施す改造を選んでください
 PRINTL 　[1] - ロボトミー手術
+PRINTL 　[2] - 処女膜の再生
+PRINTL 　[3] - 性転換
 [SKIPSTART]
-PRINTL 　[1] - 処女膜の再生
-PRINTL 　[2] - 性転換
-PRINTL 　[3] - 代謝の活性化/不活化
-PRINTL 　[4] - 性感帯
-PRINTL 　[5] - 性ホルモンの投与
+PRINTL 　[4] - 代謝の活性化/不活化
+PRINTL 　[5] - 性感帯
+PRINTL 　[6] - 性ホルモンの投与
 [SKIPEND]
 DRAWLINE
 PRINTPLAIN 　体質関連　
@@ -20,14 +20,16 @@ SELECTCASE RESULT
     CASE 0
         RETURN
     CASE 1
-        CALL 処女膜再生
+        CALL ロボトミー手術
     CASE 2
-        CALL 性転換
+        CALL 処女膜再生
     CASE 3
-        CALL 代謝
+        CALL 性転換
     CASE 4
-        CALL 性感帯
+        CALL 代謝
     CASE 5
+        CALL 性感帯
+    CASE 6
         CALL 性ホルモン
 ENDSELECT
 
@@ -39,11 +41,410 @@ SELECTCASE RESULT
 ENDSELECT
 
 @処女膜再生
+#DIM DYNAMIC 患者 = -1
+#DIM DYNAMIC 費用
+#DIM DYNAMIC LCOUNT
+PRINTL □処女膜再生手術
+PRINTL 　処女膜を縫合して再生する手術
+IF !ORIGIN
+	PRINTL □費用
+	CALL PASELIL, @"　{費用}＄"
+ENDIF
+PRINTL □注意事項
+PRINTL 　術後1週間ほどの経過観察が必要
+PRINTL □患者
+IF 患者 >= 0
+	PRINTFORML 　[1] - %NAME:患者%
+ELSE
+	PRINTL 　[1] - 患者を選ぶ
+ENDIF
+DRAWLINE
+PRINTPLAIN 　処女膜再生手術　
+PRINT [0] - 戻る　
+SIF 患者 >= 0
+	PRINT [2] - 術式を行う
+
+BINPUT
+SELECTCASE RESULT
+	CASE 0
+		RETURN 0
+	CASE 1
+		DRAWLINE
+		PRINTL □患者を選んでください
+		FOR PAGING, 0, CHARANUM
+			CALLFORM DISABLE, "EVENT_処女膜再生手術", PAGING
+			CALL PAGING, !RESULT && VAGINA(PAGING) && !TALENT:PAGING:処女 && !TALENT:PAGING:再生処女, @"\@ TALENT:PAGING:体格 == 1 ? 幼 #  \@", "患者"
+		NEXT
+		SELECTCASE RESULT
+			CASE -1
+				RESTART
+			CASEELSE
+				費用 = 30000
+				;小柄体型だと費用が減る
+				; SIF TALENT:RESULT:体格 == 1
+				; 	費用 -= 30000
+				患者 = RESULT
+				RESTART
+		ENDSELECT
+	CASE 2
+		IF MONEY < 費用 && !ORIGIN
+			PRINTW 費用が足りません
+			RESTART
+		ENDIF
+		PRINTW 処女膜再生手術を始めます
+		CALL PAYMENT, -費用, "処女膜再生手術費用"
+		TALENT:患者:再生処女 = 1
+		CFLAG:患者:使用不可 = 15
+		CFLAG:患者:ストレス値 += 10
+		TALENT:患者:改造済み += 10
+		口上用患者 = 患者
+		CALL 身体改造口上, "処女膜再生手術"
+		;医療経験加算
+		FOR LCOUNT, 0, CHARANUM
+			SIF CSTR:LCOUNT:配属 == "医務室" && CFLAG:LCOUNT:配属完了
+				EXP:LCOUNT:医療経験 += 5
+		NEXT
+		RETURN 1
+ENDSELECT
 
 @性転換
+#DIM DYNAMIC 患者 = -1
+#DIM DYNAMIC 患者性別 = 0
+#DIM DYNAMIC 術師 = -1
+#DIM DYNAMIC 費用, 3
+#DIM DYNAMIC LRESULT
+#DIM DYNAMIC LCOUNT
+#DIM DYNAMIC 性器リソース使用 = -1
+
+
+PRINTL □性別再割当手術
+PRINTL 　魔法、もしくは外科手術により現在の性別の性器を切除・封鎖し、異なる性別の性器を形成、もしくは移植する
+IF !ORIGIN
+	PRINTL □費用
+	CALL PASELIL, @"　{SUMARRAY(費用)}＄"
+ENDIF
+PRINTL □注意事項
+PRINTL 　魔法か外科手術かによって形成後の機能が異なる
+PRINTL 　外科手術によって形成した場合、交配は不可能
+PRINTL 　ただし本物の男性器を移植した場合はその限りではない。
+PRINTL 　移植は事前に採集した男性器を使用する。女性器の移植には対応していない
+PRINTL 　魔術師によって形成した場合、交配も可能
+PRINTL 　術士は種族「魔術師」の必要がある
+PRINTL 　ふたなりの場合、現在の性別の性器へ切除・封鎖のみ処置し残りの性器は温存する
+PRINTL 　いずれの方法も、患者は1週間、魔術師は3日ほどの安静が必要
+PRINTL □患者
+
+
+IF 患者 >= 0
+	PRINTFORMLC 　[1] - %NAME:患者%
+ELSE
+	PRINTLC 　[1] - 患者を選ぶ
+ENDIF
+IF 術師 >= 0
+	PRINTFORMLC [2] - %NAME:術師%(魔術師)
+ELSE
+	PRINTLC [2] - 術師を選ぶ
+ENDIF
+
+IF  患者性別 == 2 && !TALENT:患者:ふたなり
+	IF 性器リソース使用 >= 0
+		PRINTFORMLC [3] - 保管している%CSVNAMEF(性器リソース使用)%の男性器を使用
+	ELSE
+		PRINTLC [3] - 保管済みの男性器を使う
+	ENDIF
+ENDIF
+PRINTL 
+DRAWLINE
+PRINTPLAIN 　性別再割当手術　
+PRINT [0] - 戻る　
+SIF 患者 >= 0
+	PRINT [4] - 術式を始める
+PRINTL 
+
+BINPUT
+SELECTCASE RESULT
+	CASE 0
+		RETURN 0
+	CASE 1
+		DRAWLINE
+		PRINTL □患者を選んでください
+		FOR PAGING, 0, CHARANUM
+			CALLFORM DISABLE, "EVENT_性転換手術", PAGING
+			CALL PAGING, !RESULT , @"\@ TALENT:PAGING:体格 == 1 ? 幼 #  \@", "患者"
+		NEXT
+		SELECTCASE RESULT
+			CASE -1
+				RESTART
+			CASEELSE
+				患者 = RESULT
+				費用 = 50000
+				;小柄体型だと費用は下がる
+				SIF TALENT:RESULT:体格 == 1
+					費用 -= 20000
+				RESTART
+		ENDSELECT
+		SIF 患者性別 != SEX(患者)
+			性器リソース使用 = -1
+		SIF TALENT:患者:ふたなり
+			性器リソース使用 = -1
+		患者性別 = SEX(患者)
+	CASE 2
+		DRAWLINE
+		PRINTL □患者を選んでください
+		FOR PAGING, 0, CHARANUM
+			CALLFORM DISABLE, "EVENT_性転換手術", PAGING
+			CALL PAGING, !RESULT && CSTR:PAGING:種族 == "魔術師", , "術師"
+		NEXT
+		SELECTCASE RESULT
+			CASE -1
+				RESTART
+			CASEELSE
+				術師 = RESULT
+				費用:1 = 50000
+				IF 術師 >= 0
+					;魔術師だと技巧に応じて費用は下がる
+					SELECTCASE ABL:RESULT:技巧
+						CASE IS <= 9
+							費用:1 /= ABL:RESULT:技巧
+						CASEELSE
+							費用:1 = 3000
+					ENDSELECT
+				ENDIF
+;					ペニスサイズ = 0
+				RESTART
+		ENDSELECT
+	CASE 3
+		SELECTCASE 患者性別
+			CASE 2
+				DRAWLINE
+				CALL 性器一覧, "男性器"
+				性器リソース使用 = RESULT
+				IF 性器リソース使用 >= 0
+					術師 = -1
+				ENDIF
+				RESTART
+		ENDSELECT
+	CASE 4
+		SIF 患者 == -1
+			RESTART
+		IF SUMARRAY(費用) > MONEY && !ORIGIN
+			PRINTW 費用が足りません
+			RESTART
+		ENDIF
+		PRINTL 性別再割当手術を始めます
+		PRINTFORM %CALLNAME:患者%
+		SIF 術師 >= 0
+			PRINTFORM と%CALLNAME:術師%
+		PRINTW は準備のため休養に入ります
+		CALL PAYMENT, -SUMARRAY(費用), "性別再割当手術費用"
+		SELECTCASE 患者性別
+			CASE 1
+				IF TALENT:患者:ふたなり
+					TALENT:患者:ふたなり = 0
+				ELSE
+					CFLAG:患者:卵管結紮 = 1
+					CFLAG:患者:使用不可 = 15
+					IF 術師 >= 0
+						CFLAG:患者:卵管結紮 = 0
+						CFLAG:術師:使用不可 = 7
+					ENDIF
+					CALL CLEAR_FLAG, 患者
+					TALENT:患者:処女 = 1
+				ENDIF
+				IF TALENT:患者:童貞
+					CSTR:患者:童貞 = NOTLOSTVIRGIN
+					TALENT:患者:童貞 = 0
+				ENDIF
+				TALENT:患者:性別 = 2
+				CALL 装飾継続チェック, 患者
+				;毛玉氏のパッチ
+				IF TALENT:患者:バストサイズ >= 1
+				ELSEIF OPTION:TSBランダム == 0
+					TALENT:患者:バストサイズ = TALENT:患者:体格
+				ELSEIF OPTION:TSBランダム == 1
+					IF TALENT:患者:体格 <= 2
+						SELECTCASE RAND:100
+							;小柄体型は15%で絶壁
+							CASE IS < 15
+								TALENT:患者:バストサイズ = 1
+							;小柄体型は40%で貧乳
+							CASE IS < 55
+								TALENT:患者:バストサイズ = 2
+							;小柄体型は25%で普乳
+							CASE IS < 80
+								TALENT:患者:バストサイズ = 3
+							;小柄体型は8%で巨乳
+							CASE IS < 88
+								TALENT:患者:バストサイズ = 4
+							;小柄体型は7%で豊乳
+							CASE IS < 95
+								TALENT:患者:バストサイズ = 5
+							;小柄体型は5%で爆乳
+							CASEELSE
+								TALENT:患者:バストサイズ = 6
+						ENDSELECT
+					ELSE
+						SELECTCASE RAND:100
+							;普通体型は10%で絶壁
+							CASE IS < 10
+								TALENT:患者:バストサイズ = 1
+							;普通体型は23%で貧乳
+							CASE IS < 33
+								TALENT:患者:バストサイズ = 2
+							;普通体型は34%で普乳
+							CASE IS < 67
+								TALENT:患者:バストサイズ = 3
+							;普通体型は13%で巨乳
+							CASE IS < 80
+								TALENT:患者:バストサイズ = 4
+							;普通体型は10%で豊乳
+							CASE IS < 90
+								TALENT:患者:バストサイズ = 5
+							;普通体型は10%で爆乳
+							CASEELSE
+								TALENT:患者:バストサイズ = 6
+						ENDSELECT
+					ENDIF
+				ENDIF
+				;メス度に応じてＶ感覚に初期補正が入る 最大で5まで
+				ABL:患者:Ｖ感覚 = MIN(ABL:患者:メス度, 5)
+				ABL:患者:メス度 = 0
+				ABL:患者:ホモっ気 = 0
+				ABL:患者:ゲイ中毒 = 0
+			CASE 2
+				IF TALENT:患者:ふたなり
+					TALENT:患者:ふたなり = 0
+				ELSE
+					CFLAG:患者:精管結紮 = 1
+					CFLAG:患者:使用不可 = 15
+					CFLAG:患者:男性器提供者 = -1
+					IF 術師 >= 0
+						CFLAG:患者:精管結紮 = 0
+						CFLAG:術師:使用不可 = 7
+					ENDIF
+					IF 性器リソース使用 >= 0
+						性器リソース:性器リソース使用:男性器--
+						CFLAG:患者:精管結紮 = 0
+						CFLAG:患者:男性器提供者 = 性器リソース使用
+						CFLAG:患者:男性器移植済み = 1
+					ENDIF
+					TALENT:患者:童貞 = 1
+				ENDIF
+				IF TALENT:患者:処女
+					CSTR:患者:処女 = NOTLOSTVIRGIN
+					TALENT:患者:処女 = 0
+				ENDIF
+				TALENT:患者:性別 = 1
+				TALENT:患者:バストサイズ = 0
+				ABL:患者:レズっ気 = 0
+				ABL:患者:レズ中毒 = 0
+				ABL:患者:噴乳中毒 = 0
+				CALL CLEAR_FLAG, 患者
+				CALL 装飾継続チェック, 患者
+		ENDSELECT
+		CALL 装飾継続チェック, 患者
+		TALENT:患者:性転換済 = 1
+		CFLAG:患者:ストレス値 += 200
+		TALENT:患者:改造済み += 10
+		口上用患者:0 = 患者
+		CALL 身体改造口上, "性転換手術"
+		;医療経験加算
+		FOR LCOUNT, 0, CHARANUM
+			SIF CSTR:LCOUNT:配属 == "医務室" && CFLAG:LCOUNT:配属完了
+				EXP:LCOUNT:医療経験 += 5
+		NEXT
+		RETURN 1
+ENDSELECT
 
 @代謝
 
 @性感帯
 
 @性ホルモン
+
+@ロボトミー手術
+#DIM DYNAMIC 患者 = -1
+#DIM DYNAMIC 費用
+#DIM DYNAMIC LRESULT
+#DIM DYNAMIC LCOUNT
+
+PRINTL □前頭葉白質切截術（ロボトミー手術）
+PRINTL 　外科手術により脳の前頭前野にある神経繊維を切断する
+IF !ORIGIN
+	PRINTL □費用
+	CALL PASELIL, @"　{費用}＄"
+ENDIF
+PRINTL □注意事項
+PRINTL 　手術後は一週間ほど安静が必要
+PRINTL 　患者の人格に深刻な影響を及ぼす。
+PRINTL □患者
+IF 患者 >= 0
+	PRINTFORMLC 　[1] - %NAME:患者%
+ELSE
+	PRINTLC 　[1] - 患者を選ぶ
+ENDIF
+PRINTL 
+DRAWLINE
+PRINTPLAIN 　前頭葉白質切截術　
+PRINT [0] - 戻る　
+SIF 患者 >= 0
+	PRINT [2] - 術式を始める
+PRINTL 
+
+BINPUT
+SELECTCASE RESULT
+	CASE 0
+		RETURN 0
+	CASE 1
+		DRAWLINE
+		PRINTL □患者を選んでください
+		FOR PAGING, 0, CHARANUM
+			CALLFORM DISABLE, "EVENT_ロボトミー手術", PAGING
+			CALL PAGING, !RESULT && !TALENT:PAGING:ロボトミー施術済み && CSTR:PAGING:種族 != "機械"  && !TALENT:PAGING:無機物, @"\@ TALENT:PAGING:体格 == 1 ? 幼 #  \@", "患者"
+		NEXT
+		SELECTCASE RESULT
+			CASE -1
+				RESTART
+			CASEELSE
+				患者 = RESULT
+				費用 = 50000
+				;経眼窩式だと肋骨取るより安そうではある
+				RESTART
+		ENDSELECT
+	CASE 2
+		SIF 患者 == -1
+			RESTART
+		IF SUMARRAY(費用) > MONEY && !ORIGIN
+			PRINTW 費用が足りません
+			RESTART
+		ENDIF
+		PRINTL 前頭葉白質切截術の術式を始めます
+		PRINTFORMW %CALLNAME:患者%は準備のため休養に入ります
+		CALL PAYMENT, -SUMARRAY(費用), "前頭葉白質切截術費用"
+		TALENT:患者:ロボトミー施術済み = 1
+        TALENT:患者:生意気 = 0
+        TALENT:患者:反抗的 = 0
+		TALENT:患者:衝動的 = 0
+        TALENT:患者:プライド高い = 0
+        TALENT:患者:ハイテンション = 0
+        TALENT:患者:強気 = 0
+		TALENT:患者:ヤンデレ = 0
+		TALENT:患者:ツンデレ = 0
+        TALENT:患者:無関心 = 1
+        TALENT:患者:感情乏しい = 1
+        TALENT:患者:好奇心 = 0
+        TALENT:患者:気丈 = 0
+        TALENT:患者:習得早い = 0
+        TALENT:患者:習得遅い = 1
+		CFLAG:患者:使用不可 = 15
+		CFLAG:患者:男性器提供者 = -1
+		口上用患者 = 患者
+		TALENT:患者:改造済み += 10
+		CALL 身体改造口上, "ロボトミー手術"
+		;医療経験加算
+		FOR LCOUNT, 0, CHARANUM
+			SIF CSTR:LCOUNT:配属 == "医務室" && CFLAG:LCOUNT:配属完了
+				EXP:LCOUNT:医療経験 += 5
+		NEXT
+		RETURN 1
+ENDSELECT
