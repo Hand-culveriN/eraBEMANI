@@ -8,7 +8,7 @@
 "大隈 子熊"
 }
 
-ロケーション説明 = 動画配信者を中心に扱うテレビ局。有名人も多く出演する
+ロケーション説明 = コンテンターと呼ばれる動画配信者を中心に扱うテレビ局
 
 FOR LCOUNT, 0, VARSIZE("条件用キャラ")
 	IF GETCHARANAME(条件用キャラ:LCOUNT) > 0
@@ -86,22 +86,10 @@ FOR LCOUNT, 始点, 終点
 	;学校などに行ってるキャラは居ない
 	SIF CSTR:LCOUNT:現在地 != "" && !データベース参照中
 		CONTINUE
-	SELECTCASE CHARANAMEF(LCOUNT)
-		;クルー三人組
-		CASE "大海嘯 オルカ", "宿木 鷹臣", "大隈 子熊"
-			SIF 出現率:LCOUNT >= 0
-				出現率:LCOUNT = 80
-		CASEELSE
-		;ぽらりこのコンテンター枠は50%
-		;人気物も結構居るので10%
-			IF GROUPMATCH("ポラリスコード", CSTR:LCOUNT:登場作品, CSTR:LCOUNT:登場作品２, CSTR:LCOUNT:登場作品３)
-				SIF 出現率:LCOUNT >= 0
-					出現率:LCOUNT = 50
-			ELSEIF TALENT:LCOUNT:人気
-				SIF 出現率:LCOUNT >= 0
-					出現率:LCOUNT = 10
-			ENDIF
-	ENDSELECT
+	IF GROUPMATCH("ポラリスコード", CSTR:LCOUNT:登場作品, CSTR:LCOUNT:登場作品２, CSTR:LCOUNT:登場作品３)
+		SIF 出現率:LCOUNT >= 0
+			出現率:LCOUNT = 20
+	ENDIF
 NEXT
 
 SIF 始点 == 1
