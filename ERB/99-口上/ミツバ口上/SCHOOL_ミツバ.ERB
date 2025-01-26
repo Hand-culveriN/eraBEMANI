@@ -341,7 +341,7 @@ SELECTCASE RESULT
 				CASE 400 TO 500
 					PRINTFORMW 「えっと…いくらあっても困らないわ。いつもありがとね」
 			ENDSELECT
-			CALL 好感度上昇,好感度合計(GETCHARANAME("アンコク・ミツバ")), "ときめき", 20
+			CALL 好感度上昇, GETCHARANAME("アンコク・ミツバ"), "ときめき", 20
 			献上ポイント++
 		ENDIF
 	CASE 1
@@ -381,7 +381,7 @@ SELECTCASE RESULT
 						PRINTFORMW 「良きかな良きかな、フハハハハ！」
 				ENDSELECT
 			ENDIF
-			CALL 好感度上昇,好感度合計(GETCHARANAME("アンコク・ミツバ")), "ときめき", 40
+			CALL 好感度上昇, GETCHARANAME("アンコク・ミツバ"), "ときめき", 40
 			献上ポイント++
 		ENDIF
 	CASE 2
@@ -409,7 +409,7 @@ SELECTCASE RESULT
 					PRINTFORML ミツバの邪悪な笑みが浮かぶ…
 					PRINTFORMW 「まぁアナタは日々熱心に協力してくれるから、罰は当たらないでしょう。暗黒感謝！」
 			ENDSELECT
-			CALL 好感度上昇,好感度合計(GETCHARANAME("アンコク・ミツバ")), "ときめき", 55
+			CALL 好感度上昇, GETCHARANAME("アンコク・ミツバ"), "ときめき", 55
 			献上ポイント++
 		ENDIF
 	CASE 9
@@ -420,7 +420,7 @@ SELECTCASE RESULT
 		ELSE
 			PRINTFORMW ミツバは物足りなさそうだが、賞賛の言葉を受けて誇らしげだ…
 		ENDIF
-		CALL 好感度上昇,好感度合計(GETCHARANAME("アンコク・ミツバ")), "ときめき", 5
+		CALL 好感度上昇, GETCHARANAME("アンコク・ミツバ"), "ときめき", 5
 ENDSELECT
 
 @SCHOOL_アンコク・ミツバ_専用コマンド不可_暗黒神に捧げる
