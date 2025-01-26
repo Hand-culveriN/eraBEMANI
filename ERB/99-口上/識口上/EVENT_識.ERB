@@ -2129,6 +2129,7 @@ SELECTCASE FALLTYPE(TARGET)
 	CASE 1, 2
 		PRINTFORML 「どうしたんだい急に…僕は\@名前あり() ? %CALLNAME:PLAYER% # 君 \@の元を離れるなんて、考えられないよ」
         PRINTFORML 「まさか金銭面に余裕が無くなったとか、理由があるのかい？」
+		CALL SLINEWAIT, "識は再び売り出される状況に困惑している様子だ。ＷそＷれＷでＷもＷ、売却しますか？"
 		PRINTL [0] はい
 		PRINTL [1] いいえ
         CFLAG:売却寸止め = 1
