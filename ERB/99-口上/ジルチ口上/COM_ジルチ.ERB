@@ -98,7 +98,7 @@ ELSEIF MARK:屈服刻印 >= 2
 	ENDSELECT
 ;それ以外
 ELSE
-	SELECTCASE RAND:2
+	SELECTCASE RAND:6
 		CASE 0
 			PRINTFORMW 「知らねー奴に咥えられて興奮するとか、あってたまるかよ…！｣
 		CASE 1
@@ -108,6 +108,8 @@ ELSE
 				CASE 2
 					PRINTFORMW （俺的にはアリだが複雑な気分だぜ…）
 			ENDSELECT
+		CASE 3
+			PRINTFORMW 「\@ABL:Ｃ感覚 >= 4 ? っく…おぉ…っ、 # う、あ、\@止せ、やめろっ…！」
 	ENDSELECT
 ENDIF
 
@@ -133,7 +135,7 @@ RETURN 0
 @COM_手淫する_ジルチ
 ;陥落済み
 IF 陥落(TARGET)
-	SELECTCASE RAND:2
+	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「ふふっ…いいだろ…俺の、結構デカいぜ…？」
 		CASE 1
@@ -144,14 +146,14 @@ ELSEIF ハニーバニー
 	PRINTFORMW 「おいおいマジか、本当に扱いてくれた……っ」
 ;屈服刻印Lv2
 ELSEIF MARK:屈服刻印 >= 2
-	SELECTCASE RAND:2
+	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「他人にされるとなんか…気持ちいいか、わかんね…っ！」
 		CASE 1
 			PRINTFORMW 「うっ…ん…し、しょうがねぇなぁ…」
 	ENDSELECT
 ELSE
-	SELECTCASE RAND:2
+	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「なっ…何処触ってんだコラァ！」
 		CASE 1
@@ -166,7 +168,7 @@ RETURN 0
 ;-------------------------------------------------
 @COM_素股する_ジルチ
 IF 陥落(TARGET)
-	SELECTCASE RAND:2
+	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「気持ちよさそうに擦り付けてよぉ…このままだと、入っちまいそうだな？」
 		CASE 1
@@ -178,7 +180,7 @@ ELSEIF ハニーバニー
 	PRINTFORMW 「本当に…いいのか？」
 ;屈服刻印
 ELSEIF MARK:屈服刻印 >= 2
-	SELECTCASE RAND:2
+	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「うぁ…は…ダ、ダメだ！そんなに…擦りつけてくるんじゃ…ねぇ…っ」
 		CASE 1
@@ -186,7 +188,7 @@ ELSEIF MARK:屈服刻印 >= 2
 	ENDSELECT
 ;それ以外
 ELSE
-	SELECTCASE RAND:2
+	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「ば、馬鹿野郎！ナマで擦り付けてくる奴があるか！」
 		CASE 1
@@ -251,11 +253,13 @@ ELSE
 		PRINTFORMW 「マジかよナイア…俺のケツ舐める気か……」
 	;それ以外
 	ELSE
-		SELECTCASE RAND:2
+		SELECTCASE RAND:6
 			CASE 0
 				PRINTFORMW 「どさくさに紛れて舐めようとすんな！蹴られてぇのか！」
 			CASE 1
-				PRINTFORMW 「うぇ、あぁ…屈辱的だ…」
+				PRINTFORMW 「\@ABL:Ａ感覚 <= 4 ? うぇ、あぁ…屈辱的だ… # は、あ…っ、舐めんな、こんの馬鹿野郎…っ\@」
+			CASE 2
+				PRINTFORMW 「あぁクソッ、狂ってやがる…っ！」
 		ENDSELECT
 	ENDIF
 ENDIF
@@ -268,7 +272,7 @@ RETURN 0
 @COM_アナル愛撫_ジルチ
 ;陥落済み
 IF 陥落(TARGET)
-	SELECTCASE RAND:2
+	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「ふぅ…はぁっ、少し指増やしても、いいぞ…」
 		CASE 1
@@ -341,16 +345,19 @@ ELSE
 			IF SELECTCOMS == "乳首舐め"
 				PRINTFORMW 乳首を舐られて驚いたジルチに抵抗されてしまった。
 				PRINTFORMW 羞恥心のあまり軽蔑の意を込めて%CALLNAME:PLAYER%を罵ってきた…
-			ELSE
+			ELSEIF ABL:Ｂ感覚 < 3
 				PRINTFORMW 揉みしだいても乳首を指先で擦り付けるような愛撫をされても大した快感も無い、
 				PRINTFORMW 一方的に胸を責められるだけのジルチは少し困惑している…
+			ELSE
+				PRINTFORML 揉まれる度に感度が上がってきたのか、呻く様な喘ぎ声が漏れている
+				PRINTFORMW %CALLNAME:PLAYER%に見られまいと顔を背けている…
 			ENDIF
 		CASE 1
 			PRINTFORMW 「はぁ…止めようぜ、こんなの」
 		CASE 2
 			SELECTCASE SEX(PLAYER)
 				CASE 1
-					PRINTFORMW 「野郎の胸なんざ、揉もうが弄っても楽しくなんかねぇだろ」
+					PRINTFORMW 「\@SELECTCOMS == "乳首舐め" ? だ、だから俺の胸を吸うな！しゃぶっても美味しかねーよ！ # 野郎の胸なんざ、揉もうが弄っても楽しくなんかねぇだろ\@」
 				CASE 2
 					PRINTFORMW 「ん～…君の胸揉ませてくれるってんなら、考えなくもないが」
 			ENDSELECT
@@ -418,7 +425,7 @@ ELSE
 		ENDSELECT
 	;それ以外
 	ELSE
-		SELECTCASE RAND:2
+		SELECTCASE RAND:4
 			CASE 0
 				PRINTFORMW 「股おっ広げても、このジルチ様が屈するわけねーっての！いっ、いいからさっさとパンツ穿けッ！」
 			CASE 1
@@ -479,16 +486,18 @@ ELSE
 		IF PREVCOMS == "アナル舐め"
 			PRINTFORMW 「おい、さっきケツ舐めてた口を近付けんな。一度口濯いでこい！」
 		ELSE
-			SELECTCASE RAND:2
+			SELECTCASE RAND:6
 				CASE 0
 					PRINTFORMW 「気乗りしねぇ…」
 				CASE 1
 					SELECTCASE SEX(PLAYER)
 						CASE 1
-							PRINTFORMW 「げぇ～～、男からされるのは萎えるぜ…」
+							PRINTFORMW （げぇ～～、男からされるのは萎えるぜ…）
 						CASE 2
-							PRINTFORMW （ナイアからされたら、と思えば気が楽なんだけどダメだこれ）
+							PRINTFORMW （ナイアとのキスを想像すれば良いんだ、そしたら…）
 					ENDSELECT
+				CASE 2
+					PRINTFORMW 「\@ABL:従順 >= 3 ? 頼むから本気にすんなよ。俺はまだ…その気じゃない # 俺はな、安い男じゃあねぇよ…\@」
 			ENDSELECT
 		ENDIF
 	ENDIF
@@ -595,7 +604,12 @@ ELSE
 		PRINTFORMW 「はぁ…これで満足出来るなんて安いもんよ」
 	;それ以外
 	ELSE
-		PRINTFORMW 「あぁ～～～口の中気持ち悪ぃ～…」
+		SELECTCASE RAND:4
+			CASE 0
+				PRINTFORMW （あぁ～～～口の中気持ち悪ぃ～…）
+			CASE 1
+				PRINTFORMW 「これで満足したかよ。俺はお前なんかに靡く気も更々ねぇぞ」
+		ENDSELECT
 	ENDIF
 ENDIF
 
@@ -628,47 +642,41 @@ IF ASSI > 0 && CHARANAMEF(ASSI) == "識"
 	IF 陥落(ASSI)
 		SELECTCASE RAND:3
 			CASE 0
-				PRINTFORMW 「ジルも熱々だねぇ。恋仲でも節度は守れよ？」
-				PRINTFORMW 「あぁ？余計なお世話だろ…つうか、人がいちゃついてる所に覗いてくんなよ」
+				PRINTFORML 「ジルも熱々だねぇ。恋仲でも節度は守れよ？」
+				PRINTFORML 「あぁ？余計なお世話だろ…つうか、人がいちゃついてる所に覗いてくんなよ」
 				PRINTFORMW 「経験者として言ったつもりなんだけどなぁ…」
 			CASE 1
 				PRINTFORMW 「一見ガラ悪そうだけど、義理人情に厚いんだ。ジルの事を宜しく頼むよ」
 			CASE 2
-				PRINTFORMW 「大分前に『胃ーあーる漢方』っていうバンド組んだよな～、結局方向性の違いで解散しちゃったけど…」
+				PRINTFORML 「大分前に『胃ーあーる漢方』っていうバンド組んだよな～、結局方向性の違いで解散しちゃったけど…」
 				PRINTFORMW 「あのバンド名、ジルが考えてたんだっけ？」
 		ENDSELECT
 	ENDIF
 ;ケイナ(陥落済み)がいる
 ELSEIF ASSI > 0 && CHARANAMEF(ASSI) == "光伊 計名"
 	IF 陥落(ASSI)
-		SELECTCASE RAND:3
+		SELECTCASE RAND:2
 			CASE 0
 				IF GETCHARANAME("識") > 0 && CHARANAMEF(ASSI) != "識" && !CFLAG:GETCHARANAME("識"):キャラロスト
 					IF 陥落(GETCHARANAME("識"))
 					;毛糸のクマさんパンツ事件を振り返る
-						PRINTFORMW 「……」
-						PRINTFORMW 「……」
+						PRINTFORML 「……」
+						PRINTFORML 「……」
 						PRINTFORMW 「ん？なんだ二人共、俺の方見て」
-						PRINTFORMW 「ジルチ…あの時はツガルちゃんに変な事言ったせいで、一時期IIDXの印象悪なったの覚えとるやろな」
-						PRINTFORMW 「制服のミニスカートが風に揺れて～とかさー、シアちゃんが呆れるのも頷けるなぁ。同情するよ」
+						PRINTFORML 「ジルチ…あの時はツガルちゃんに変な事言ったせいで、一時期IIDXの印象悪なったの覚えとるやろな」
+						PRINTFORML 「制服のミニスカートが風に揺れて～とかさー、シアちゃんが呆れるのも頷けるなぁ。同情するよ」
 						PRINTFORMW 「なっ！？テメェらがシステムボイスでの件を根に持つ必要ねぇだろ！あん時はだな…俺のツガルきゅんに滾るリビドーには逆らえなかっただけさ」
-						PRINTFORMW 「5th以来三人揃って、BISTROVERのメインビジュアルに出られたんだから感謝しろよな」
-						PRINTFORMW 「はいはい（結局セクハラ発言やないか）」
+						PRINTFORML 「はいはい（結局セクハラ発言やないか）」
 						PRINTFORMW 「わかってますって」
 					ENDIF
 				ELSE
-					PRINTFORMW 「どうも、この単細胞の保護者です。ジルチが人様でお世話になりまして…」
-					PRINTFORMW 「誰が単細胞だコラァ！」
-					PRINTFORMW 「冗談はさておき、料理人としての腕前は本物なので沢山こき使ってやってくれよな～後は頼みますわ」
-					PRINTFORMW 「あ、ケイナの奴逃げたな！？」
+				PRINTFORML 「フレンドリーだけど誰彼問わず巻き込んで…ぐぇっ」
+				PRINTFORML 「なんだよ～三人で大体の事やってのけただろうがよ～」
+				PRINTFORMW 「くっ、首が締まる締まるぅ…って、トラブルメーカーなんよお前は！」
 				ENDIF
 			CASE 1
-				PRINTFORMW 「フレンドリーだけど誰彼問わず巻き込んで…ぐぇっ」
-				PRINTFORMW 「なんだよ～三人で大体の事やってのけただろうがよ～」
-				PRINTFORMW 「くっ、首が締まる締まるぅ…って、トラブルメーカーなんよお前は！」
-			CASE 2
-				PRINTFORMW 「私達もなんだかんだ言って付き合い長いからなぁ。ノリと勢い？って奴で」
-				PRINTFORMW 「漫才、バンドは失敗しちまったけどな！けど今は俺らと楽しんで暮らしてるだろう？」
+				PRINTFORML 「私達もなんだかんだ言って付き合い長いからなぁ。ノリと勢い？って奴で」
+				PRINTFORML 「漫才、バンドは失敗しちまったけどな！けど今は俺らと楽しんで暮らしてるだろう？」
 				PRINTFORMW 「まぁ…知り合いが誰一人居ないよりはマシやな…」
 		ENDSELECT
 	ENDIF
@@ -677,17 +685,17 @@ ELSEIF ASSI > 0 && CHARANAMEF(ASSI) == "チャオ"
 	IF 陥落(ASSI)
 		SELECTCASE RAND:3
 			CASE 0
-				PRINTFORMW 「ニョキニョキ頭にその、可愛いとか言われると…恥ずかしいからせめてカッコイイ所を見て欲しいネ」
-				PRINTFORMW （ははぁ～ん…さてはあの制服姿の時を相当気にしてんな～？）
-				PRINTFORMW 「俺はありのままの気持ちで言っただけだぜ。だって可愛いし」
+				PRINTFORML 「ニョキニョキ頭にその、可愛いとか言われると…恥ずかしいからせめてカッコイイ所を見て欲しいネ」
+				PRINTFORML （ははぁ～ん…さてはあの制服姿の時を相当気にしてんな～？）
+				PRINTFORML 「俺はありのままの気持ちで言っただけだぜ。だって可愛いし」
 				PRINTFORMW 「かぁあ～～～…まま、また言われたアルぅ…やっぱりその言葉、禁句決定～！」
 			CASE 1
-				PRINTFORMW 「『紅海灘宮（ホンハイタングゥ）』の事知りたいか？そこで副料理長（スーシェフ）を務める、私自慢の高級中華料理店ネ！」
+				PRINTFORML 「『紅海灘宮（ホンハイタングゥ）』の事知りたいか？そこで副料理長（スーシェフ）を務める、私自慢の高級中華料理店ネ！」
 				PRINTFORMW 「今着てるのが本気モードの衣装、決して接客してる姿じゃないヨ？」
 			CASE 2
-				PRINTFORMW 「なんと…私を調教した理由は、えっちな事ばかりじゃなく飲食店経営にスカウトする意味でもあったアルか！？」
+				PRINTFORML 「なんと…私を調教した理由は、えっちな事ばかりじゃなく飲食店経営にスカウトする意味でもあったアルか！？」
 				PRINTFORMW 「その通り！俺もその手で連れてこられたんだが…ここでは君の料理技能と、ナイスバディを必要としている！」
-				PRINTFORMW 「ナイスバディは引っかかるけど……分かった、私、%CALLNAME:MASTER%の為に頑張るネ！」
+				PRINTFORML 「ナイスバディは引っかかるけど……分かった、私、%CALLNAME:MASTER%の為に頑張るネ！」
 				PRINTFORMW 「その心意気で頑張ってくれたまえ！だーはっはっは！」
 		ENDSELECT
 	ENDIF
@@ -795,7 +803,7 @@ RETURN 0
 ;-------------------------------------------------
 @COM_料理を作る_ジルチ
 ;もう少し料理系の地の文とか出来たら書き足すつもり
-IF TALENT:料理人
+IF 陥落(TARGET)
 	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「レシピ通りだが、材料足りてないから代用して作ってみたぜ」
@@ -817,7 +825,7 @@ RETURN 0
 ;-------------------------------------------------
 @COM_お菓子を作る_ジルチ
 ;召しませBISTROVERでのデザートも半分楽曲名ネタだったけど、恐らくケーキ的な物作れそうでは
-IF TALENT:料理人
+IF 陥落(TARGET)
 	SELECTCASE RAND:4
 		CASE 0
 			PRINTFORMW 「小腹空いてるんだろ？一息付けるモン作っとくぜ」
@@ -1340,7 +1348,7 @@ ELSEIF MARK:屈服刻印 >= 2
 ELSE
 	SELECTCASE RAND:2
 		CASE 0
-			PRINTFORML 「……このまま握りつぶしてやろうか？」
+			PRINTFORML 「\@MARK:反発刻印 ? ……このまま握りつぶしてやろうか？ # ハイハイ、やりゃあいいんだろやれば\@」
 		CASE 1
 			SELECTCASE SEX(PLAYER)
 				CASE 1
@@ -1397,7 +1405,12 @@ ELSEIF MARK:屈服刻印 >= 2
 	ENDSELECT
 ;それ以外
 ELSE
-	PRINTFORML 「クッ…マジで辛いぜ…なんで俺が舐めなきゃ…」
+	SELECTCASE RAND:4
+		CASE 0
+			PRINTFORML 「クッ…マジで辛いぜ。なんで俺が舐めなきゃ…」
+		CASE 1
+			PRINTFORML 「舌もっと使え、って言われてもよぉ…」
+	ENDSELECT
 ENDIF
 
 RETURN 0
@@ -1606,7 +1619,7 @@ ELSEIF MARK:屈服刻印 >= 2
 	PRINTFORML 「別に俺じゃなくてもいいんじゃねーか………」
 ;未陥落
 ELSE
-	PRINTFORML 「あぁ～クソっ、人前で盛り付きやがって…！」
+	PRINTFORML 「あぁ～クソっ、人前で盛り付きやがって！」
 ENDIF
 
 RETURN 0
