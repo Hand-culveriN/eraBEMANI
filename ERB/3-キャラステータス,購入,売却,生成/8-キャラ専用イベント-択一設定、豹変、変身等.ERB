@@ -202,6 +202,8 @@ IF (TALENT:対象:恋心 && CSTR:対象:恋心 == "不明") || (TALENT:対象:�
 			RETURNF "松田君"
 		CASE "ミツモト・ココア"
 			RETURNF "ファイトガールの指導員"
+		CASE "パステル"
+			RETURNF "ライト"
 		CASEELSE
 			IF TALENT:対象:恋心
 				RETURNF @"%NAME:対象%の想い人"
