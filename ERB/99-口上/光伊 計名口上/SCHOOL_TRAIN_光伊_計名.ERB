@@ -15,7 +15,7 @@ SIF OPTION:口上表示 == 0
 ;分からない場合は既存の口上を参考にするとわかりやすいかもです
 ;SELECTCOMS = "実行したコマンド名"
 ;-------------------------------------------------
-PRINTFORML 
+;PRINTFORML 
 
 ;-------------------------------------------------
 ;@SCHOOL_KOJO_EX関係（X1をキャラ番号に置換）
@@ -36,11 +36,11 @@ SIF OPTION:口上表示 == 0
 IF NOWEX:Ｃ絶頂
 	;初めて
 	IF FEX:0 == 0
-		PRINTFORML 
+		;PRINTFORML 
 		FEX:0 = 1
 	;二回目以降
 	ELSE
-		PRINTFORML 
+		;PRINTFORML 
 	ENDIF
 ENDIF
 
@@ -48,14 +48,32 @@ ENDIF
 ;A絶頂
 ;-------------------------------------------------
 IF NOWEX:Ａ絶頂
-	;初めて
-	IF FEX:2 == 0
-		PRINTFORML 
-		FEX:2 = 1
-	;二回目以降
-	ELSE
-		PRINTFORML 
-	ENDIF
+	SELECTCASE SELECTCOMS
+		CASE "正常位アナル", "後背位アナル", "騎乗位アナル", "下着ずらし挿入アナル"
+			SELECTCASE RAND:2
+				CASE 0
+					SELECTCASE ABL:Ａ感覚
+						CASE IS <= 3
+							PRINTFORML 「うぅっ…んぁああっ！」
+							PRINTFORMW 不慣れなアナルでも絶頂を迎えたケイナ。しかし両脚はガクガク震えていた…
+						CASE IS >= 4
+							PRINTFORML 「んぁああっ、イイっ、も…いっちゃう……！」
+							PRINTFORMW 開発されきったアナルで絶頂したケイナは、引き抜かれた%CALLNAME:PLAYER%のペニスを物足りなさそうに見つめていた…
+					ENDSELECT
+				CASE 1
+					PRINTDATAW
+						DATA 「あーっ、あぁあああっ…！」
+						DATA 「や、らぁ……だめぇ……！」
+						DATA 「あうっ、んぁっ…はぁああっ！」
+					ENDDATA
+			ENDSELECT
+		CASEELSE
+			PRINTDATAW
+				DATA 「あっ、そないにしたら…うぅっ！」
+				DATAFORM 「\@ABL:Ａ感覚 < 4 ? なんか…来そう…っ… # はぁん…っ、ひぁ……！\@」
+				DATA 「はぁあ、あ…いく……っ」
+			ENDDATA
+	ENDSELECT
 ENDIF
 
 ;-------------------------------------------------
@@ -64,11 +82,11 @@ ENDIF
 IF NOWEX:Ｂ絶頂
 	;初めて
 	IF FEX:3 == 0
-		PRINTFORML 
+		;PRINTFORML 
 		FEX:3 = 1
 	;二回目以降
 	ELSE
-		PRINTFORML 
+		;PRINTFORML 
 	ENDIF
 ENDIF
 
@@ -77,14 +95,31 @@ ENDIF
 ;-------------------------------------------------
 ;射精している
 IF NOWEX:射精
-	PRINTFORML 
+	SELECTCASE SELECTCOMS
+		CASE "後背位させる", "正常位させる"
+			SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「あ…あぁ、イクっ、ぁああ…！」
+					PRINTFORMW ケイナのペニスが脈打ちながら\@TEQUIP:コンドーム ? 避妊具越し # 彼女の膣内\@に射精した…
+				CASE 1
+					PRINTFORMW ケイナは声を押し殺して、%CALLNAME:PLAYER%を\@SELECTCOMS == "後背位させる" ? 臀部を掴みながら # 抱きしめる姿勢のまま\@膣内で果てた…
+			ENDSELECT
+		CASE "後背位アナルさせる", "正常位アナルさせる"
+			SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「っ…うぅ……出る…」
+					PRINTFORMW ケイナは%CALLNAME:PLAYER%の頭部を優しく撫でながら、初々しいアナルに吐精した…
+				CASE 1
+					PRINTFORML 「あぁ…っ、出してもうた…っ……」
+			ENDSELECT
+	ENDSELECT
 ENDIF
 
 ;-------------------------------------------------
 ;潮噴き 調教対象にペニスがある場合のみ
 ;-------------------------------------------------
 IF NOWEX:潮噴き
-	PRINTFORML 
+	;PRINTFORML 
 ENDIF
 
 ;-------------------------------------------------
