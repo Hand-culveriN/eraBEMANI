@@ -2205,7 +2205,7 @@ ELSE
 	ELSE
 		SELECTCASE RAND:3
 			CASE 0
-				PRINTFORMW 「嫌だ、やめてくれ…僕は男色趣味なんか持って…あぁ……！」
+				PRINTFORMW 「嫌だ、やめてくれ…僕は\@SEX(PLAYER) == 1 ? 男色趣味なんか持って # 受け身じゃ\@…あぁ……！」
 			CASE 1
 				PRINTFORMW 「これは正直言って……僕にする事じゃない」
 			CASE 2
@@ -2346,7 +2346,7 @@ ELSE
 				PRINTFORMW 「気持ちいい…ぁ……あぁ…っ！」
 		ENDSELECT
 	ELSE
-		SELECTCASE RAND:2
+		SELECTCASE RAND:6
 			CASE 0
 				PRINTFORML 「…………」
 				PRINTFORMW 識は無言で背後から%CALLNAME:PLAYER%の膣を突いている……
@@ -2607,7 +2607,7 @@ ELSE
 		TRYCALLFORM MESSAGE_COM_%SELECTCOMS%
 	;屈服刻印Lv3
 	ELSEIF MARK:屈服刻印 == 3
-		SELECTCASE RAND:2
+		SELECTCASE RAND:3
 			CASE 0
 				PRINTFORMW 「君への奉仕なら仕方ないな」
 			CASE 1
@@ -2894,10 +2894,10 @@ ELSE
 		SELECTCASE MARK:反発刻印
 			CASE 1, 2
 				PRINTFORML 「止せってこの…っ、いっ、痛……ぁああっ！」
-				PRINTFORMW 躾けるべくして鞭を振るう%CALLNAME:PLAYER%。しかし、識の表情にはまだ反抗心が残っている…………
+				PRINTFORMW 躾けるべくして鞭を振るう%CALLNAME:PLAYER%。しかし、識の表情にはまだ反抗心が残っている…
 			CASE 3
 				PRINTFORML 「うぅ…ぐぅ……畜生、こんなの狂っている………一生後悔するぞ…！」
-				PRINTFORMW 鞭打たれた識は怯むどころか恨み言を呟きだした…………
+				PRINTFORMW 鞭打たれた識は怯むどころか恨み言を呟きだした…
 			CASEELSE
 				TRYCALLFORM MESSAGE_COM_%SELECTCOMS%
 				PRINTFORMW 「痛い…僕が何したって言うんだ！」
@@ -2918,7 +2918,7 @@ IF TEQUIP:縄 == 0
 		IF !陥落(TARGET)
 			PRINTFORML 「本当に僕を縛り付けるとは、なりふり構わず要られなくなった所か」
 			PRINTFORML 「それとも…妻に身代金を要求させる気かい？」
-			PRINTFORMW 麻縄で縛られた識は%CALLNAME:PLAYER%に憤慨しながらも一瞥した……
+			PRINTFORMW 麻縄で縛られた識は%CALLNAME:PLAYER%に憤慨しながらも一瞥した…
 		ENDIF
 		FCOM:SELECTCOM = 1
 	;二回目以降
@@ -2941,7 +2941,11 @@ IF TEQUIP:縄 == 0
 		;屈服刻印Lv3
 		ELSEIF MARK:屈服刻印 == 3
 			TRYCALLFORM MESSAGE_COM_%SELECTCOMS%
-			PRINTFORMW 「クソっ、拘束されるのは…キツイな」
+			PRINTDATAW
+				DATAFORM 「\@MARK:反発刻印 ? クソっ、拘束されるのは…キツイな # っく…うぅ…っ、苦しい…\@」
+				DATAFORM 「\@ABL:マゾっ気 >= 4 ? や…嫌だ…気持ちよく、なんか… # ま、またなのか…っ、全身が痛い…\@」
+				;DATA 「」
+			ENDDATA
 		ELSE
 		;反発刻印あり
 			SELECTCASE MARK:反発刻印
@@ -2953,11 +2957,11 @@ IF TEQUIP:縄 == 0
 					PRINTFORML 抵抗もせず、やけに大人しいままの識を縛った
 					PRINTFORML 「ハッ、どうせ君は暴力でしか従わせられないんだろ？」
 					PRINTFORML 「…………殴ってみろよ」
-					PRINTFORMW 心底忌み嫌う%CALLNAME:PLAYER%を前にして、識は鼻で笑いながら挑発している……
+					PRINTFORMW 心底忌み嫌う%CALLNAME:PLAYER%を前にして、識は鼻で笑いながら挑発している…
 				;反発刻印なし
 				CASEELSE
 					TRYCALLFORM MESSAGE_COM_%SELECTCOMS%
-					PRINTFORMW 「うわっ、縛らないで！」
+					PRINTFORMW 「は、離してくれ…痛いっ…！」
 			ENDSELECT
 		ENDIF
 	ENDIF
@@ -3026,10 +3030,10 @@ ELSE
 				SELECTCASE SELECTCOMS
 					CASE "踏んでもらう"
 						PRINTFORML 「これだけ踏み付けても大丈夫か」
-						PRINTFORMW 識は怪我してしまわない程度に何度も踏み付けている…………
+						PRINTFORMW 識は怪我してしまわない程度に何度も踏み付けている…
 					CASE "叩いてもらう"
 						PRINTFORML 「やっぱり痛いよね…」
-						PRINTFORMW それでも%CALLNAME:PLAYER%は識に続けて欲しいと頼んでいる…………
+						PRINTFORMW それでも%CALLNAME:PLAYER%は識に続けて欲しいと頼んでいる…
 				ENDSELECT
 			;服従
 			;服従系ならサドっ気Lv3以下・Lv4・Lv5以上で地の文変化
@@ -3044,7 +3048,7 @@ ELSE
 							CASE 4
 								PRINTFORMW 躊躇う事無く笑顔で踏み躙っている……
 							CASE IS >= 5
-								PRINTFORMW もっと踏んで欲しいと伝えると期待に応えるべく、識は罵りながら踏み付けていた………
+								PRINTFORMW もっと踏んで欲しいと伝えると期待に応えるべく、識は罵りながら踏み付けていた…
 						ENDSELECT
 					CASE "叩いてもらう"
 						SELECTCASE ABL:サドっ気
@@ -3304,7 +3308,7 @@ ELSE
 					ELSE
 						PRINTFORML 「し、識！お願いです、早く助けて！」
 						PRINTFORML 「ケイナ………どうして分からないのかな」
-						PRINTFORMW この人の好さが―――友人のケイナにも容赦無く哀れみの言葉を投げかけた………
+						PRINTFORMW この人の好さが―――友人のケイナにも容赦無く哀れみの言葉を投げかけた…
 						PRINTFORML 「そんな、人が犯されそうなのに薄情な事言わないでくださいよ！誰かコイツを！い、嫌…嫌だぁああ！」
 						WAIT
 					ENDIF
@@ -3317,7 +3321,7 @@ ELSE
 					ELSE
 					;雰囲気ぶち壊しで草
 						PRINTFORML 「ふざけんなケツ掘り野郎！俺は女にしか興味…ギャーッ！」
-						PRINTFORMW 抵抗も空しく%CALLNAME:MASTER%に犯されるジルチを、識は気の毒そうに見ている…………
+						PRINTFORMW 抵抗も空しく%CALLNAME:MASTER%に犯されるジルチを、識は気の毒そうに見ている…
 						PRINTFORML 「ジル……お前こんな調子で抱かれてるのか、楽になったらどうだ？」
 						PRINTFORML 「畜生、一人だけ高みの見物してんじゃねぇぞ識…仲間なら助けてくれよ！」
 						PRINTFORMW 「んーすまん、手出しするのが申し訳ないからさ………」
@@ -3531,7 +3535,7 @@ ELSE
 			CASE 0
 				PRINTFORML 「う…ん…ケイナ…っ………ケイナ…はぁ…っ、ん…」
 				PRINTFORML 「…っ、識…識…………！」
-				PRINTFORMW 二人は時折口付けし、互いのペニスを先走りで滴らせながら擦り付け合っている…………
+				PRINTFORMW 二人は時折口付けし、互いのペニスを先走りで滴らせながら擦り付け合っている…
 			CASE 1
 				PRINTFORML 「識も結構気持ち良さそう……この辺とか」
 				PRINTFORMW 「ん…ひっ！、ケ、ケイナぁ………亀頭扱いちゃやだ……！」
@@ -3808,7 +3812,7 @@ IF TEQUIP:縄 == 0
 	;陥落済み
 	IF 陥落(TARGET)
 		PRINTFORML 「あ…あぁ…っ！？」
-		PRINTFORMW 触手がミシミシと音を立てながら識の全身を拘束した、程好く力加減されている…………
+		PRINTFORMW 触手がミシミシと音を立てながら識の全身を拘束した、程好く力加減されている…
 	;魔法掛かってる時
 	ELSEIF ハニーバニー
 		;地の文のみ
@@ -3817,7 +3821,7 @@ IF TEQUIP:縄 == 0
 	ELSEIF MARK:屈服刻印 == 3
 		PRINTFORML 「ぐっ…あ…がはっ…………！？」
 		PRINTFORML 「はあっ、苦し…っ…頼む、離してくれ…！」
-		PRINTFORMW 触手は苦しむ識を他所に、身動きが取れぬ様に縛り上げた…………
+		PRINTFORMW 触手は苦しむ識を他所に、身動きが取れぬ様に縛り上げた…
 	ENDIF
 ;解除時
 ELSEIF TEQUIP:縄
@@ -3849,13 +3853,13 @@ IF TEQUIP:オナホール == 0
 		IF 陥落(TARGET)
 			PRINTFORML 「こ…今度は何……花…！？」
 			PRINTFORML 次に現れた触手はヒダを花びらの様に蠢かせながら識のペニスを捕らえる。
-			PRINTFORMW 初めはゆっくり―――緩やかに速度を上げながら前後運動させている…………
+			PRINTFORMW 初めはゆっくり―――緩やかに速度を上げながら前後運動させている…
 			PRINTFORML 「んんっ…ひ……ぁ……はぁああ……！」
 			WAIT
 		ELSE
 			PRINTFORML 「今度は……ひっ！」
 			PRINTFORML 識はオナホールの役目を持つ触手にペニスを犯されてしまった。
-			PRINTFORMW 人間の女性器とも似つかぬ形は搾精に特化している…………
+			PRINTFORMW 人間の女性器とも似つかぬ形は搾精に特化している…
 		ENDIF
 		FCOM:SELECTCOM = 1
 	;二回目以降
@@ -3868,7 +3872,7 @@ IF TEQUIP:オナホール == 0
 		;屈服刻印Lv3
 		ELSEIF MARK:屈服刻印 == 3
 			PRINTFORML 「うぁ……来るな………は、あぁああ………っ！」
-			PRINTFORMW 触手は狙いを外すことなく識のペニスに喰らい付いた……
+			PRINTFORMW 触手は狙いを外すことなく識のペニスに喰らい付いた…
 		;それ以外
 		ELSE
 			;PRINTFORMW 
@@ -3883,10 +3887,10 @@ ELSEIF TEQUIP:オナホール
 		PRINTFORML 「ーーーッ！、あぁっ…はぁあ……はぁ…っ…………」
 		IF 陥落(TARGET)
 			PRINTFORML 「あ…あはは…………まるで、別の生き物みたいで………凄く気持ちいいよ…」
-			PRINTFORMW 識は人間の女性では味わえぬ触手オナホの快感に恍惚していた………
+			PRINTFORMW 識は人間の女性では味わえぬ触手オナホの快感に恍惚していた…
 		ELSE
 			PRINTFORML 「嫌なのに…はぁああ…きもち、いい…………」
-			PRINTFORMW この世とは思えぬ快感に押し負けた識のペニスはヒクヒクと震えている…………
+			PRINTFORMW この世とは思えぬ快感に押し負けた識のペニスはヒクヒクと震えている…
 		ENDIF
 		FCOM:SELECTCOM = 2
 	;2回目以降
@@ -3920,7 +3924,7 @@ IF TEQUIP:野外プレイ == 0
 		ELSEIF SHIKI_ZILCH()
 			PRINTFORML 「ジル、覚悟はしていたけど……」
 			PRINTFORML 「そうか…識に付ける時が来たか」
-			PRINTFORMW 大体分かった様な顔をしながらジルチは識に首輪を付けた。主従逆転された状態での野外プレイは斬新な発想でもあった……
+			PRINTFORMW 大体分かった様な顔をしながらジルチは識に首輪を付けた。主従逆転された状態での野外プレイは斬新な発想でもあった…
 			PRINTFORML 「……いざされる側になると…ジルの気持ちもわかる分、ドキドキするな……」
 			WAIT
 		ELSEIF 陥落(TARGET)
@@ -4284,6 +4288,9 @@ IF TEQUIP:女装 == 0
 					PRINTFORML 「女装、というより普通のコスプレだな……」
 					PRINTFORML 「なーに言ってんだ識、コイツは貴重なブルマだぞ」
 					PRINTFORMW 「えぇ～」
+				CASE "サキュバスチアコス"
+					PRINTFORML 「え…やだやだやだ！この衣裳恥ずかしいって！」
+					PRINTFORMW 「どう考えても女性向けだよね！？何とか言ってくれよ！」
 			ENDSELECT
 		ENDIF
 	ENDIF

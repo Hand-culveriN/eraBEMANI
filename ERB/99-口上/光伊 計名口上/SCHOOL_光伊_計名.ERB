@@ -28,12 +28,18 @@ IF !CFLAG:面識
 ;名乗る部分がボキャ貧だな～～～
 	SELECTCASE CSTR:PLAYER:現在地
 		CASE "ゲームセンター"
-			PRINTFORML %CALLNAME:PLAYER%はIIDXを終えたばかりのケイナに声を掛けた。感想を聞いてみたところ、プレイ精度はそこそこある様だが…
+			PRINTFORML \@バイト帰り ? 仕事を終えたばかりの #\@%CALLNAME:PLAYER%はIIDXを終えたばかりのケイナに声を掛けた。感想を聞いてみたところ、プレイ精度はそこそこある様だが…
 			PRINTFORML 「いやぁ、それ程でもないよ。君も結構興味深そうにプレイを見入ってくれるじゃないか」
 			PRINTFORMW 「名前？あぁそうだった…光伊計名、ケイナとでも呼んでくれ。上手い人から意見を募るのは、君にとって良い経験になるかもね」
 		CASE "ビストローバー"
-			PRINTFORML ビストローバーの料理に満足した%CALLNAME:PLAYER%はケイナに自己紹介も兼ねてお礼を言った
-			PRINTFORMW 「ありがとうございます。お客様の名前、しかと覚えておきますね」
+			IF バイト帰り
+				PRINTFORML バイト帰りの%CALLNAME:PLAYER%はケイナに話しかけると、少し落ち着いた様子で話してくれた
+				PRINTFORMW 「あぁ、君が新入りの学生さんか。私は光伊計名、普段の仕事と言えば…ウェイターやってるよ」
+				PRINTFORMW 「一応本職があるんだけどね」
+			ELSE
+				PRINTFORML ビストローバーの料理に満足した%CALLNAME:PLAYER%はケイナに自己紹介も兼ねてお礼を言った
+				PRINTFORMW 「ありがとうございます。お客様の名前、しかと覚えておきますね」
+			ENDIF
 		CASE "ポップン電機"
 			PRINTFORML 賑やかな店内でPCコーナーを物色するケイナ。%CALLNAME:PLAYER%が合間を縫って話しかけると、此方に気付いたようだ
 			PRINTFORML 「あ、どうも…独り言が多くて申し訳ない、私が光伊計名。……気軽にケイナと呼んでも構わないよ」
@@ -118,12 +124,18 @@ ELSE
 			ELSE
 				SELECTCASE RAND:6
 					CASE 0
-						PRINTFORML 二人は会話している最中、彩葉がこちらに話しかけてきた
-						PRINTFORML 「お～こ～め～ お～こめこめ～♪ ケイナ君やん。はろはろ～」
-						PRINTFORMW 「やぁ彩葉。いつもならリリスちゃんと一緒じゃなかったっけ」
-						PRINTFORML 「リリちん、今日はお兄さんの仕事手伝いに行っとるから、ウチ一人で来とるよ」
-						PRINTFORMW 「あ……そうか…来れないんだ」
-						PRINTFORMW ケイナの言葉に彩葉は首を傾げている…
+						IF !TALENT:恋慕
+							PRINTFORML 二人は会話している最中、彩葉がこちらに話しかけてきた
+							PRINTFORML 「お～こ～め～ お～こめこめ～♪ ケイナ君やん。はろはろ～」
+							PRINTFORMW 「やぁ彩葉。いつもならリリスちゃんと一緒じゃなかったっけ」
+							PRINTFORML 「リリちん、今日はお兄さんの仕事手伝いに行っとるから、ウチ一人で来とるよ」
+							PRINTFORMW 「あ……そうか…来れないんだ」
+							PRINTFORMW ケイナの言葉に彩葉は首を傾げている…
+						ELSE
+							PRINTFORML 二人が会話している間、彩葉とリリスはこちらを嬉しそうに見ている。話の話題が気になっている様子だ…
+							PRINTFORML 「はろはろお二人さ～ん、いつも通りIIDXの話しとるんか？」
+							PRINTFORMW 「あぁ…そんな所かな、リリスちゃんも来てくれて嬉しいよ。折角だし、最近のトレンド話でもしようか」
+						ENDIF
 					CASE 1
 						IF CFLAG:GETCHARANAME("菱宮 津軽"):面識
 							PRINTFORM %CALLNAME:PLAYER%はケイナと話していると、横からツガルの姿があった
@@ -202,7 +214,7 @@ ELSE
 				IF TALENT:恋慕
 					PRINTFORML バイト帰りにケイナと会話する%CALLNAME:PLAYER%。その横からジルチが話しかけてきた
 					PRINTFORML 「ヘイヘイヘーイ、今日もリア充してるって感じだな。ケイナ」
-					PRINTFORMW （まったく、ジルチはいつも横から割り込んでくるから嫌なんだ。今回は少しだけ話を聞いてくれるならいいか…）
+					PRINTFORMW （まったく、ジルチはいつも横から割り込んでくるから嫌なんだ。話を聞いてくれるならいいか…）
 				ELSE
 					PRINTFORML \@ターン == "昼" ? ランチタイムの時間帯 # ディナー客 \@で賑わう店内の喧騒は未だ止まない。それでも%CALLNAME:PLAYER%はケイナに話しかけていた…
 					PRINTDATAW
@@ -257,7 +269,7 @@ ELSE
 					DATA 「ワイヤレスイヤホンね。私も一度使ってみたけど、着け心地と音質は良いよ」
 					DATA 「完全ワイヤレスだと脱落リスクが高いから…そっちには手を出せないね」
 					ENDLIST
-					DATA 「私もここのテーマ曲を口ずさんでしまうんだ。ガジェオタあるあるって奴だね」
+					DATA 「私もここのテーマ曲を口ずさんでしまうんだ。癖になるよね」
 					DATALIST
 					DATA 「レビュー動画で酷評されてる割に価格相応なのは致し方ない、それでも評価高そうだ、あのルーター。現在のWi-Fi通信規格に合わせても結局…ベストエフォートだから感情論による使用感は当てにならない……」
 					DATAFORM 「あぁごめん、\@名前あり() ? %CALLNAME:PLAYER%がいるのに # 思わず\@独り言になってしまった」
@@ -266,7 +278,7 @@ ELSE
 					DATAFORM %セリフ%
 				ENDDATA
 			ELSEIF バイト帰り
-				PRINTFORML 一通り仕事を終えたばかりの%CALLNAME:PLAYER%は、偶然通りすがったケイナに話しかけた
+				PRINTFORML 一通り仕事を終えたばかりの%CALLNAME:PLAYER%は、たまたま通りかかったケイナに話しかけた
 				SELECTCASE RAND:2
 					CASE 0
 						PRINT 「バイトお疲れ様、
@@ -321,13 +333,8 @@ ELSE
 						PRINTFORML %CALLNAME:PLAYER%は普段通り、買い物をするケイナに声を掛けてみた
 						PRINTFORMW 探る手を一旦止めたケイナは%CALLNAME:PLAYER%との会話を楽しんでいた…
 					CASE 2
-						IF バイト帰り
-							PRINTFORML 一通り仕事を終えたばかりの%CALLNAME:PLAYER%は、偶然通りすがったケイナに話しかけた
-							PRINTFORMW 「バイトお疲れ様、制服姿も結構似合ってたよ、ここで何度も商品の下見に来るから…君に度々話しかけるかもしれない。その時は宜しく頼むよ」
-						ELSE
-							PRINTFORML %CALLNAME:PLAYER%は品定めをしているケイナに話しかけた
-							PRINTFORMW 今回はグラフィックボードとマザーボードの下見をしている最中。自作PCすら作った事が無い%CALLNAME:PLAYER%には難しくてよく分からなかったが、ケイナは分かり易く説明を交えながら話してくれた…
-						ENDIF
+						PRINTFORML %CALLNAME:PLAYER%は品定めをしているケイナに話しかけた
+						PRINTFORMW 今回はグラフィックボードとマザーボードの下見をしている最中。自作PCすら作った事が無い%CALLNAME:PLAYER%には難しくてよく分からなかったが、ケイナは分かり易く説明を交えながら話してくれた…
 				ENDSELECT
 			ENDIF
 		CASEELSE
@@ -744,34 +751,37 @@ TRYCALLFORM SCHOOL_MESSAGE_同行_成功
 
 @SCHOOL_光伊_計名_同行_失敗
 TRYCALLFORM SCHOOL_MESSAGE_同行_失敗
+
 ;-------------------------------------------------
 ;専用コマンド
 ;-------------------------------------------------
 @SCHOOL_光伊_計名_専用コマンド_ケイナの身体を賭ける
-PRINTFORM %CALLNAME:PLAYER%はケイナの方を見ながら
-SELECTCASE SEX(PLAYER)
-	CASE 1
-		IF ABL:PLAYER:Ａ感覚 >= 4
-			PRINT 淫靡な表情を浮かべた
-		ELSE
-			PRINT 股座を膨らませていた
-		ENDIF
-	CASE 2
-		IF ABL:PLAYER:Ａ感覚 >= 4 || ABL:PLAYER:Ｖ感覚 >= 4
-			PRINT スカートの下をちらつかせてみせた
-		ELSE
-			PRINT 自信満々な笑みを浮かべている
-		ENDIF
-ENDSELECT
-PRINTFORMW 。この対局に勝てたら一夜を過ごしたい、と賭けに出る%CALLNAME:PLAYER%からの要求にケイナも応えてくれた
-CALL SCHOOL_光伊_計名_八牌麻雀_開始
+IF CFLAG:面識 && 好感度:既成事実
+	PRINTFORM %CALLNAME:PLAYER%はケイナの方を見ながら
+	SELECTCASE SEX(PLAYER)
+		CASE 1
+			IF ABL:PLAYER:Ａ感覚 >= 4
+				PRINT 淫靡な表情を浮かべた
+			ELSE
+				PRINT 股座を膨らませていた
+			ENDIF
+		CASE 2
+			IF ABL:PLAYER:Ａ感覚 >= 4 || ABL:PLAYER:Ｖ感覚 >= 4
+				PRINT スカートの下をちらつかせてみせた
+			ELSE
+				PRINT 自信満々な笑みを浮かべている
+			ENDIF
+	ENDSELECT
+	PRINTFORMW 。この対局に勝てたら一夜を過ごしたい、と賭けに出る%CALLNAME:PLAYER%からの要求にケイナも応えてくれた
+ENDIF
+CALL SCHOOL_光伊計名_八牌麻雀_開始
 
 @SCHOOL_光伊_計名_専用コマンド不可_ケイナの身体を賭ける
-IF CFLAG:インモラル < 20 || 好感度:既成事実
+IF !CFLAG:面識 || !好感度:既成事実
 	RESULTS = 
 	RETURN -1
 ELSEIF CSTR:PLAYER:現在地 != "雀喫茶ローシャンテ"
-	RESULTS = ケイナとの関係を深めていない
+	RESULTS = 遊び場以外では賭けられない
 	RETURN 1
 ENDIF
 ;-------------------------------------------------
@@ -808,7 +818,6 @@ IF 同行者 == TARGET
 		ENDDATA
 	ENDIF
 ENDIF
-
 @SCHOOL_光伊_計名_八牌麻雀_敗北
 TRYCALLFORM SCHOOL_MESSAGE_八牌麻雀_敗北
 IF 同行者 == TARGET
@@ -1038,7 +1047,6 @@ ELSE
 ;既成事実のみ汎用地の文
 	TRYCALLFORM SCHOOL_光伊_計名_ホテル朝プレイ_行為前
 ENDIF
-
 @SCHOOL_光伊_計名_ホテル朝プレイ_行為後
 IF TALENT:恋慕
 	IF ISHOLIDAY_SCHOOL()
@@ -1087,17 +1095,79 @@ TRYCALLFORM SCHOOL_MESSAGE_宿泊_行為後
 ;家に呼ぶ
 ;-------------------------------------------------
 @SCHOOL_光伊_計名_劣情を伝える_成功
-TRYCALLFORM SCHOOL_MESSAGE_劣情を伝える_成功
+IF TALENT:恋慕 || 好感度:既成事実
+	SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML %CALLNAME:PLAYER%は\@好感度:セフレ >= 2000 ? 性欲を持て余しているので # 愛しさを感じて\@、家に来てほしいと誘った
+			PRINTFORMW 同じ様に劣情を懐くケイナは\@SEX(PLAYER) == 1 ? 彼 # 彼女\@からの要求に応えた…
+		CASEELSE
+			PRINTFORML %CALLNAME:PLAYER%はケイナを電話口に誘う。幾度も身体を重ねているケイナは性的な誘いを受け入れた
+			IF ターン == "夜"
+				PRINTFORMW 宿泊を想定して、夜遅い時間帯でも逢いに来てくれるようだ…
+			ELSE
+				PRINTDATAW
+					DATA 「OKわかった。少しだけ待っててくれへんか」
+					DATA 「……いいよ、仕事はなんとかして切り上げる」
+					DATA 「おぉ、丁度非番だったんや。今の内に準備してくる」
+				ENDDATA
+			ENDIF
+	ENDSELECT
+ENDIF
 
 @SCHOOL_光伊_計名_劣情を伝える_失敗
-TRYCALLFORM SCHOOL_MESSAGE_劣情を伝える_失敗
+IF !TALENT:恋慕
+	SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 劣情が籠った思いの内をケイナに打ち明けた。しかし大人の対応で受け流されてしまった…
+			PRINTFORMW 「まぁ…気持ちは分かるよ、遊び目的なら構わないけどね」
+		CASE 1
+			PRINTFORMW 滾る思いで%CALLNAME:PLAYER%はケイナに電話を掛けた
+			PRINTDATAW
+				DATAFORM 当のケイナは\@ターン == "昼" ? 学業をおろそかにする事を咎めるだけで # 仕事がまだ終わっていない、と\@電話を切られてしまった…
+				DATAFORM 「\@好感度:既成事実 ? 興奮しとるようやけど、抑えが効かんのは困るなぁ。今日だけ堪忍な # おいおい、冗談でも私にぶつけたって意味無いぞ。…私達はまだそんな関係じゃないだろう？\@」
+				DATA ――必死に伝えてみたが、ケイナにはぐらかされたまま、話を打ち切られた…
+			ENDDATA
+	ENDSELECT
+ENDIF
 
 @SCHOOL_光伊_計名_呼び出し_成功
-TRYCALLFORM SCHOOL_MESSAGE_呼び出し_成功
+IF TALENT:恋慕 || 好感度:既成事実
+	SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML %CALLNAME:PLAYER%は家に遊びに来てほしい、と伝えるとケイナは喜んで応えてくれた
+			PRINTFORMW 電話口でこれで羽が伸ばせる、と聞いてテンションが上がっている…
+		CASEELSE
+			PRINTFORML ケイナに自分の家で遊ばないかと電話で誘った。その言葉に肯定的のケイナは二つ返事で了承した
+			PRINTDATAW
+				DATA 「いいね、会うまでに楽しい遊びを考えておくとしよう」
+				DATA 「ええよ～。次は何処行こうか、楽しみや」
+				DATA 「わかった、一度君の家で昼飯食べてから…ゲーセンにでも行く？」
+			ENDDATA
+	ENDSELECT
+ELSE
+	TRYCALLFORM SCHOOL_MESSAGE_呼び出し_成功
+ENDIF
 
 @SCHOOL_光伊_計名_呼び出し_失敗
-TRYCALLFORM SCHOOL_MESSAGE_呼び出し_失敗
-
+PRINTFORML %CALLNAME:PLAYER%はケイナに家に来ないか、と誘ってみた
+SELECTCASE RAND:2
+	CASE 0
+		IF !ISHOLIDAY_SCHOOL() && ターン == "昼"
+			PRINTFORMW しかしケイナは、%CALLNAME:PLAYER%には学校があるから無理だと断られてしまった…
+		ELSEIF ターン == "夜"
+			PRINTFORMW 夜遅くまで居られないという事もあり、%CALLNAME:PLAYER%からの誘いを断った…
+		ELSEIF GROUPMATCH(DOW(),"火")
+			PRINTFORMW …………ケイナの電話が繋がらない。本職で忙しいのだろうか…
+		ELSE
+			PRINTFORMW ビストローバーのバイトが多忙らしく、今日は来れないと通話を切られてしまった…
+		ENDIF
+	CASE 1
+		PRINTDATAL
+			DATAFORM 「ん…あぁ、なんだ\@名前あり() ? %CALLNAME:PLAYER% # 君\@かぁ……徹夜続きで身体持たない。もすこしだけ寝かせて…」
+			DATA 「あー…もしもし？…周り騒がしくてゴメン。今手が離せなくてさ…家？それはまた今度にしてくれないか」
+			;DATA 「」
+		ENDDATA
+ENDSELECT
 ;-------------------------------------------------
 ;家に来た後
 ;-------------------------------------------------
@@ -1194,15 +1264,28 @@ TRYCALLFORM SCHOOL_MESSAGE_起床
 ;汎用シチュエーション
 ;-------------------------------------------------
 @SCHOOL_光伊_計名_自宅に来訪
-TRYCALLFORM SCHOOL_MESSAGE_自宅に来訪
 SELECTCASE CSTR:目的
-	CASE "遊び"
 	CASE "看病"
+		PRINTFORML ケイナは早速%CALLNAME:PLAYER%の容態を心配して駆けつけてきた
+		IF TALENT:恋慕 || 好感度:既成事実
+			PRINTDATAW
+				DATA 「風邪でしんどい言うから急いできたけど…ホンマに大丈夫か、今見に行ってくるからな」
+				DATA 「メール見たからには、一日だけ君の看病に付き添わなあかんな。…まずは、食欲ある？」
+				DATA 「まさか出迎えに来てくれたん…！？、ええって、無理せんでもええよ！今は寝てな！」
+			ENDDATA
+		ENDIF
 	CASE "セックス"
+		PRINTFORML %CALLNAME:PLAYER%に呼び出されたケイナは早速自宅に来た
+		IF TALENT:恋慕 || 好感度:既成事実
+			PRINTDATAW
+				DATAFORM 「\@ABL:ホモっ気 >= 4 ? 君も悪い子やなぁ、こんな大人を誑かして…冗談や。私もそんな気分だからな # おまたせ、逢いに来たよ。一応…準備は済ませてきた\@」
+				DATA 「へ？普段着で来たのかって？――気なれない服着てカッコ付けるよりはええかなって」
+				DATAFORM 「お邪魔しまーす、\@GROUPMATCH(MONTH, 6, 7, 8) ? 抱き付くより先にシャワー浴びな… # 嬉しそうに待っててくれたんか。かわええな～\@」
+			ENDDATA
+		ENDIF
 ENDSELECT
 
 @SCHOOL_光伊_計名_一緒に帰宅
-TRYCALLFORM SCHOOL_MESSAGE_一緒に帰宅
 SELECTCASE CSTR:目的
 	CASE "遊び"
 	CASE "セックス"
@@ -1218,9 +1301,9 @@ IF TALENT:恋慕 || 好感度:既成事実
 			PRINTFORMW 「\@CFLAG:インモラル >= 30 ? ホテルね…その話聞いてたらますますしたくなるっちゅうもんやないか # うんうん、私少しズボラやからな。遅れない様に気ぃ付けないと\@」
 		CASE 1
 			IF ISHOLIDAY_SCHOOL()
-				PRINTFORMW 「休校日だからいつでも行けるのってええな―。羨まし…というか丁度良い具合に休みやけど、時間作っておこか」
+				PRINTFORMW 「\@GROUPMATCH(DOW(),"土", "日") ? 週末どこかに？いいね。シフト表も丁度休みなっとるし…君に合いたいな # 休校日だからいつでも行けるのってええな―。羨まし…というか丁度良い具合に休みやけど、時間作っておこか\@」
 			ELSE
-				PRINTFORML 「\@GROUPMATCH(DOW(),"土", "日") ? 週末どこかに？いいね。シフト表も丁度休みなっとるし…君に合いたいな # お、ええの？会う約束してくれる？\@」
+				PRINTFORML 「お、ええの？会う約束してくれる？」
 				PRINTFORMW 「すぐに行ける訳やないから、空いた時間に合わせておくわ。社長には上手く言って有給取るか」
 			ENDIF
 		CASE 2
