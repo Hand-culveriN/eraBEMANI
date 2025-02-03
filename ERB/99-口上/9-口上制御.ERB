@@ -31,6 +31,9 @@ IF !CFLAG:対象:口上非表示
 	ELSE
 		IF ゲームモード() == "学園モード"
 			;学園モードでは別口上
+			;「MESSAGE_」の部分を消す
+			SIF STRFIND(対象関数, "MESSAGE_")
+				対象関数 = %SUBSTRING(対象関数, STRLENS("MESSAGE_"), STRLENS(対象関数))%
 			口上関数 = SCHOOL_KOJO_%対象関数%_%CSVNAMERPS(NOF(対象))%
 			SIF EXISTFUNCTION(口上関数)
 				RETURNF 口上関数
