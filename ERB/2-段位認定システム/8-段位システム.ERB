@@ -87,6 +87,7 @@ ENDIF
 
 ;段位ゲージに応じてBGMが変わる
 @段位認定_BGM
+[SKIPSTART]
 SELECTCASE FLAG:段位ゲージ
 	CASE 0 TO 11
 		CALL BGM再生, 段位_4
@@ -97,6 +98,7 @@ SELECTCASE FLAG:段位ゲージ
 	CASE 39 TO 50
 		CALL BGM再生, 段位_1
 ENDSELECT
+[SKIPEND]
 
 ;段位ゲージの表示
 @段位ゲージ表示
